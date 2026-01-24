@@ -10,7 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  GitHub Actions (毎時 JST 9:00-22:00)                        │
+│  GitHub Actions (毎時 JST 10:00-22:00)                       │
 │  .github/workflows/fetch-status.yml                         │
 │                                                             │
 │  1. pnpm run fetch-status → data/YYYY-MM-DD/HH-00.json     │
