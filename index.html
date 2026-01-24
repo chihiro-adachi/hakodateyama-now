@@ -172,8 +172,8 @@
       return parseInt(filename.replace('.json', '').split('-')[0], 10);
     }
 
-    // 8時から22時までの固定時間帯
-    const HOURS = Array.from({ length: 15 }, (_, i) => i + 8); // [8, 9, ..., 22]
+    // 9時から22時までの固定時間帯
+    const HOURS = Array.from({ length: 14 }, (_, i) => i + 9); // [9, 10, ..., 22]
 
     // 表示対象の施設（順序も指定）
     const TARGET_SPOTS = [
