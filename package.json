@@ -7,6 +7,7 @@
     "typecheck": "tsc --noEmit",
     "fetch-status": "node src/cli.ts",
     "build-index": "node scripts/build-index.ts",
+    "screenshot": "node scripts/capture-screenshot.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },

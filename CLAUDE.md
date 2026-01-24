@@ -58,6 +58,9 @@ pnpm run --silent fetch-status  # JSONのみ（stderrにログ出力）
 # インデックス生成（GitHub Pages用）
 pnpm run build-index
 
+# スクリーンショット取得（README用）
+pnpm run screenshot
+
 # 型チェック
 pnpm typecheck
 
