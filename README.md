@@ -4,6 +4,6 @@
 
 ## 可視化ページ
 
-https://chihiro-adachi.github.io/HakodateyamaNow/
+https://chihiro-adachi.github.io/hakodateyama-now/
 
 ![screenshot](screenshot.png)
