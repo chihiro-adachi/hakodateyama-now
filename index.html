@@ -66,14 +66,15 @@
       background: #f8f9fa;
       font-weight: bold;
     }
-    th.spot-name, td.spot-name {
-      text-align: left;
+    th.time-col, td.time-col {
+      text-align: center;
       position: sticky;
       left: 0;
       background: white;
       z-index: 1;
+      font-weight: bold;
     }
-    th.spot-name {
+    th.time-col {
       background: #f8f9fa;
     }
     /* 混雑状況の色分け */
@@ -250,16 +251,16 @@
           html += `<div class="date-section">`;
           html += `<h2>${formatDate(dateStr)}</h2>`;
           html += `<table>`;
-          html += `<thead><tr><th class="spot-name">施設名</th>`;
-          for (const hour of HOURS) {
-            html += `<th>${hour}</th>`;
+          html += `<thead><tr><th class="time-col">時間</th>`;
+          for (const spot of spots) {
+            html += `<th>${spot}</th>`;
           }
           html += `</tr></thead>`;
           html += `<tbody>`;
 
-          for (const spot of spots) {
-            html += `<tr><td class="spot-name">${spot}</td>`;
-            for (const hour of HOURS) {
+          for (const hour of HOURS) {
+            html += `<tr><td class="time-col">${hour}時</td>`;
+            for (const spot of spots) {
               const status = dataByHour[hour]?.[spot] || '-';
               const statusClass = status !== '-' ? getStatusClass(status) : '';
               html += `<td class="${statusClass}">${status}</td>`;
