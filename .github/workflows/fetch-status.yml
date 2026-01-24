@@ -29,6 +29,9 @@ jobs:
           mkdir -p "data/${DATE}"
           pnpm run --silent fetch-status 2>/dev/null > "data/${DATE}/${HOUR}.json"
 
+      - name: Build index
+        run: pnpm run build-index
+
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"

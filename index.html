@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>函館エリア混雑状況</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .date-section {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      overflow-x: auto;
+    }
+    .date-section h2 {
+      margin-top: 0;
+      color: #444;
+      border-bottom: 2px solid #007bff;
+      padding-bottom: 10px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 600px;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px 12px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    th {
+      background: #f8f9fa;
+      font-weight: bold;
+    }
+    th.spot-name, td.spot-name {
+      text-align: left;
+      position: sticky;
+      left: 0;
+      background: white;
+      z-index: 1;
+    }
+    th.spot-name {
+      background: #f8f9fa;
+    }
+    /* 混雑状況の色分け */
+    .status-空いています { background: #d4edda; color: #155724; }
+    .status-待ち時間なし { background: #d4edda; color: #155724; }
+    .status-やや混雑 { background: #fff3cd; color: #856404; }
+    .status-混雑 { background: #f8d7da; color: #721c24; }
+    .status-大混雑 { background: #dc3545; color: white; }
+    .status-通行止め中 { background: #6c757d; color: white; }
+    .status-ライトアップ中 { background: #e2d5f1; color: #5a3d7a; }
+    .status-営業中 { background: #cce5ff; color: #004085; }
+    .status-利用可能 { background: #d4edda; color: #155724; }
+    .status-wait { background: #f8d7da; color: #721c24; }
+    .no-data {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>函館エリア混雑状況</h1>
+  <div id="app">
+    <div class="loading">データを読み込み中...</div>
+  </div>
+
+  <script>
+    const BASE_URL = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+      ? ''
+      : '';
+
+    async function loadIndex() {
+      const res = await fetch(`${BASE_URL}data/index.json`);
+      if (!res.ok) throw new Error('index.json not found');
+      return res.json();
+    }
+
+    async function loadData(path) {
+      const res = await fetch(`${BASE_URL}${path}`);
+      if (!res.ok) return null;
+      return res.json();
+    }
+
+    function formatDate(dateStr) {
+      const [year, month, day] = dateStr.split('-');
+      const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+      const weekday = weekdays[date.getDay()];
+      return `${year}/${month}/${day}(${weekday})`;
+    }
+
+    function getStatusClass(status) {
+      if (status.includes('分待ち')) return 'status-wait';
+      const normalized = status.replace(/\s/g, '');
+      return `status-${normalized}`;
+    }
+
+    function extractHour(filename) {
+      // "17-00.json" -> 17
+      return parseInt(filename.replace('.json', '').split('-')[0], 10);
+    }
+
+    // 8時から22時までの固定時間帯
+    const HOURS = Array.from({ length: 15 }, (_, i) => i + 8); // [8, 9, ..., 22]
+
+    async function render() {
+      const app = document.getElementById('app');
+
+      try {
+        const index = await loadIndex();
+
+        if (!index.dates || index.dates.length === 0) {
+          app.innerHTML = '<div class="no-data">データがありません</div>';
+          return;
+        }
+
+        let html = '';
+
+        for (const dateInfo of index.dates) {
+          const dateStr = dateInfo.date;
+          const files = dateInfo.files.sort();
+
+          // 全ファイルのデータを読み込み
+          const dataByHour = {};
+          const allSpots = new Set();
+
+          for (const file of files) {
+            const data = await loadData(`data/${dateStr}/${file}`);
+            if (data && data.spots) {
+              const hour = extractHour(file);
+              dataByHour[hour] = {};
+              for (const spot of data.spots) {
+                dataByHour[hour][spot.name] = spot.status;
+                allSpots.add(spot.name);
+              }
+            }
+          }
+
+          const spots = Array.from(allSpots).sort();
+
+          if (spots.length === 0) continue;
+
+          html += `<div class="date-section">`;
+          html += `<h2>${formatDate(dateStr)}</h2>`;
+          html += `<table>`;
+          html += `<thead><tr><th class="spot-name">施設名</th>`;
+          for (const hour of HOURS) {
+            html += `<th>${hour}</th>`;
+          }
+          html += `</tr></thead>`;
+          html += `<tbody>`;
+
+          for (const spot of spots) {
+            html += `<tr><td class="spot-name">${spot}</td>`;
+            for (const hour of HOURS) {
+              const status = dataByHour[hour]?.[spot] || '-';
+              const statusClass = status !== '-' ? getStatusClass(status) : '';
+              html += `<td class="${statusClass}">${status}</td>`;
+            }
+            html += `</tr>`;
+          }
+
+          html += `</tbody></table>`;
+          html += `</div>`;
+        }
+
+        app.innerHTML = html || '<div class="no-data">データがありません</div>';
+      } catch (e) {
+        console.error(e);
+        app.innerHTML = `<div class="no-data">データの読み込みに失敗しました: ${e.message}</div>`;
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>
