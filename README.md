@@ -4,6 +4,6 @@
 
 ## 可視化ページ
 
-https://chihiro-adachi.github.io/hakodate-vacan/
+https://chihiro-adachi.github.io/HakodateyamaNow/
 
 ![screenshot](screenshot.png)
