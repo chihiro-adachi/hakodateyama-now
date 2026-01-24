@@ -97,6 +97,26 @@
       padding: 40px;
       color: #666;
     }
+    .filter {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .filter label {
+      cursor: pointer;
+      user-select: none;
+      padding: 8px 16px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .filter input:checked + span {
+      color: #007bff;
+      font-weight: bold;
+    }
+    .filter input {
+      margin-right: 6px;
+    }
   </style>
 </head>
 <body>
@@ -105,6 +125,12 @@
     <a href="https://github.com/chihiro-adachi/hakodateyama-now" target="_blank" title="GitHub">
       <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
     </a>
+  </div>
+  <div class="filter">
+    <label>
+      <input type="checkbox" id="holiday-filter">
+      <span>休日のみ表示</span>
+    </label>
   </div>
   <div id="app">
     <div class="loading">データを読み込み中...</div>
@@ -157,11 +183,34 @@
       '八幡坂',
     ];
 
+    // 日本の祝日（2026年）
+    const HOLIDAYS_2026 = new Set([
+      '2026-01-01', '2026-01-12', '2026-02-11', '2026-02-23',
+      '2026-03-20', '2026-04-29', '2026-05-03', '2026-05-04',
+      '2026-05-05', '2026-05-06', '2026-07-20', '2026-08-11',
+      '2026-09-21', '2026-09-22', '2026-09-23', '2026-10-12',
+      '2026-11-03', '2026-11-23', '2026-12-23',
+    ]);
+
+    function isHoliday(dateStr) {
+      const [year, month, day] = dateStr.split('-');
+      const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      const dayOfWeek = date.getDay();
+      // 土日 or 祝日
+      return dayOfWeek === 0 || dayOfWeek === 6 || HOLIDAYS_2026.has(dateStr);
+    }
+
+    let cachedIndex = null;
+
     async function render() {
       const app = document.getElementById('app');
+      const holidayOnly = document.getElementById('holiday-filter').checked;
 
       try {
-        const index = await loadIndex();
+        if (!cachedIndex) {
+          cachedIndex = await loadIndex();
+        }
+        const index = cachedIndex;
 
         if (!index.dates || index.dates.length === 0) {
           app.innerHTML = '<div class="no-data">データがありません</div>';
@@ -172,6 +221,9 @@
 
         for (const dateInfo of index.dates) {
           const dateStr = dateInfo.date;
+
+          // 休日フィルタ
+          if (holidayOnly && !isHoliday(dateStr)) continue;
           const files = dateInfo.files.sort();
 
           // 全ファイルのデータを読み込み
@@ -226,6 +278,7 @@
       }
     }
 
+    document.getElementById('holiday-filter').addEventListener('change', render);
     render();
   </script>
 </body>
