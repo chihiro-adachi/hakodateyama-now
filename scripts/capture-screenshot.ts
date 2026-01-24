@@ -5,7 +5,7 @@ async function capture(): Promise<void> {
   const browser = await chromium.launch({ channel: "chrome" });
   const page = await browser.newPage({ viewport: { width: 1200, height: 800 } });
 
-  await page.goto("https://chihiro-adachi.github.io/hakodate-vacan/");
+  await page.goto("https://chihiro-adachi.github.io/hakodateyama-now/");
   await page.waitForSelector(".date-section", { timeout: 10000 });
 
   const outputPath = join(import.meta.dirname, "..", "screenshot.png");
