@@ -211,10 +211,13 @@
     }
 
     // XSS対策: HTMLエスケープ
+    const HTML_ESCAPE_MAP = {
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    };
     function escapeHtml(str) {
-      return str.replace(/[&<>"']/g, c => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-      }[c]));
+      if (str == null) return '';
+      if (typeof str !== 'string') return String(str);
+      return str.replace(/[&<>"']/g, c => HTML_ESCAPE_MAP[c]);
     }
 
     function formatDate(dateStr) {
@@ -232,6 +235,7 @@
     ]);
 
     function getStatusClass(status) {
+      if (status == null || typeof status !== 'string') return '';
       if (status.includes('分待ち')) return 'status-wait';
       const normalized = status.replace(/\s/g, '');
       return KNOWN_STATUSES.has(normalized) ? `status-${normalized}` : '';
@@ -355,7 +359,7 @@
         app.innerHTML = html || '<div class="no-data">データがありません</div>';
       } catch (e) {
         console.error(e);
-        app.innerHTML = `<div class="no-data">データの読み込みに失敗しました: ${e.message}</div>`;
+        app.innerHTML = `<div class="no-data">データの読み込みに失敗しました: ${escapeHtml(e.message)}</div>`;
       }
     }
 
