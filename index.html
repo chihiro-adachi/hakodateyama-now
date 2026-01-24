@@ -126,6 +126,14 @@
     // 8時から22時までの固定時間帯
     const HOURS = Array.from({ length: 15 }, (_, i) => i + 8); // [8, 9, ..., 22]
 
+    // 表示対象の施設（順序も指定）
+    const TARGET_SPOTS = [
+      'ロープウェイ山麓駅',
+      'ロープウェイ山頂駅',
+      '屋上展望台',
+      '八幡坂',
+    ];
+
     async function render() {
       const app = document.getElementById('app');
 
@@ -159,7 +167,8 @@
             }
           }
 
-          const spots = Array.from(allSpots).sort();
+          // TARGET_SPOTSの順序で表示
+          const spots = TARGET_SPOTS.filter(s => allSpots.has(s));
 
           if (spots.length === 0) continue;
 
