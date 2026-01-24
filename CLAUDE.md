@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## プロジェクト概要
 
-函館山エリアの混雑状況を自動収集・可視化するツール。vacan.comからスクレイピングしたデータをGitHub Pagesで公開。
+函館山の混雑状況を自動収集・可視化するツール。vacan.comからスクレイピングしたデータをGitHub Pagesで公開。
 
 ## 全体フロー
 
