@@ -130,6 +130,49 @@
     .filter input {
       margin-right: 6px;
     }
+
+    /* モバイル対応 */
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+      h1 {
+        font-size: 1.3rem;
+        margin-top: 40px;
+      }
+      .header-links {
+        top: 10px;
+        right: 10px;
+        gap: 8px;
+      }
+      .header-links svg {
+        width: 20px;
+        height: 20px;
+      }
+      .header-links .vacan-link {
+        font-size: 10px;
+        padding: 3px 6px;
+      }
+      .date-section {
+        padding: 12px;
+        border-radius: 6px;
+      }
+      .date-section h2 {
+        font-size: 1rem;
+        padding-bottom: 8px;
+      }
+      table {
+        min-width: auto;
+        font-size: 12px;
+      }
+      th, td {
+        padding: 6px 4px;
+      }
+      .filter label {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -196,6 +239,17 @@
       '屋上展望台',
       '八幡坂',
     ];
+
+    // モバイル用短縮名
+    const SHORT_NAMES = {
+      'ロープウェイ山麓駅': '山麓駅',
+      'ロープウェイ山頂駅': '山頂駅',
+      '屋上展望台': '展望台',
+      '八幡坂': '八幡坂',
+    };
+
+    const isMobile = () => window.innerWidth <= 600;
+    const getSpotName = (name) => isMobile() ? SHORT_NAMES[name] || name : name;
 
     // 日本の祝日（2026年）
     const HOLIDAYS_2026 = new Set([
@@ -266,7 +320,7 @@
           html += `<table>`;
           html += `<thead><tr><th class="time-col">時間</th>`;
           for (const spot of spots) {
-            html += `<th>${spot}</th>`;
+            html += `<th>${getSpotName(spot)}</th>`;
           }
           html += `</tr></thead>`;
           html += `<tbody>`;
