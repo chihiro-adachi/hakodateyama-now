@@ -53,7 +53,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 # 混雑状況取得（結果はstdout、ログはstderr）
 pnpm run fetch-status
-pnpm run --silent fetch-status 2>/dev/null  # JSONのみ
+pnpm run --silent fetch-status  # JSONのみ（stderrにログ出力）
 
 # インデックス生成（GitHub Pages用）
 pnpm run build-index
@@ -82,5 +82,5 @@ pnpm test:watch        # ウォッチモード
 
 ## スクレイピング対象
 
-- URL: `https://vacan.com/map/...?areaName=hakodate-city`
+- URL: `https://vacan.com/map/41.7606471,140.7089988,15?areaName=hakodate-city&isOpendata=false`
 - セレクタ: `article.card-view` → `.place-name`, `.vacancy-text`

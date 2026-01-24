@@ -26,7 +26,7 @@ jobs:
           DATE=$(TZ=Asia/Tokyo date +%Y-%m-%d)
           HOUR=$(TZ=Asia/Tokyo date +%H-00)
           mkdir -p "data/${DATE}"
-          pnpm run --silent fetch-status 2>/dev/null > "data/${DATE}/${HOUR}.json"
+          pnpm run --silent fetch-status > "data/${DATE}/${HOUR}.json"
 
       - name: Build index
         run: pnpm run build-index
