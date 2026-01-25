@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { fetchStatus } from './fetch-status.ts';
+import { fetchStatus } from '../src/fetch-status.ts';
 
 describe('fetchStatus', () => {
   it('vacan.comから混雑状況を取得できる', async () => {
