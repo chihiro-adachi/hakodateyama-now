@@ -33,11 +33,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```
 ├── src/
 │   ├── fetch-status.ts      # コア関数・型定義
-│   ├── cli.ts               # CLIエントリポイント
-│   └── fetch-status.test.ts
-├── scripts/
 │   ├── build-index.ts       # data/index.json 生成
-│   └── capture-screenshot.ts
+│   ├── capture-screenshot.ts # スクリーンショット取得
+│   ├── cli.ts               # 統合CLIエントリポイント
+│   └── fetch-status.test.ts
 ├── data/
 │   ├── index.json           # 日付・ファイル一覧（自動生成）
 │   └── YYYY-MM-DD/
@@ -51,6 +50,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## コマンド
 
 ```bash
+# CLIヘルプ表示
+node src/cli.ts --help
+
 # 混雑状況取得（結果はstdout、ログはstderr）
 pnpm run fetch-status
 pnpm run --silent fetch-status  # JSONのみ（stderrにログ出力）
@@ -72,8 +74,9 @@ pnpm test:watch        # ウォッチモード
 ## 主要ファイル
 
 - `src/fetch-status.ts`: スクレイピングのコア関数。ライブラリとしても使用可能
-- `src/cli.ts`: CLI。stdout にJSON、stderr にログを出力
-- `scripts/build-index.ts`: data/配下をスキャンしてindex.jsonを生成
+- `src/build-index.ts`: data/配下をスキャンしてindex.jsonを生成
+- `src/capture-screenshot.ts`: GitHub Pagesのスクリーンショットを取得
+- `src/cli.ts`: 統合CLI（サブコマンド: fetch-status, build-index, capture-screenshot）
 - `index.html`: GitHub Pages用。JSでJSONを読み込み表形式で表示
 
 ## 技術スタック
