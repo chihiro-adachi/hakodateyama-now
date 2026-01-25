@@ -5,20 +5,19 @@ import type { DateData } from '../hooks/useStatusData';
 
 interface DateSectionProps {
   date: string;
-  files: string[];
-  loadDateData: (date: string, files: string[]) => Promise<DateData | null>;
+  loadDateData: (date: string) => Promise<DateData | null>;
 }
 
-export function DateSection({ date, files, loadDateData }: DateSectionProps) {
+export function DateSection({ date, loadDateData }: DateSectionProps) {
   const [dateData, setDateData] = useState<DateData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadDateData(date, files).then((data) => {
+    loadDateData(date).then((data) => {
       setDateData(data);
       setLoading(false);
     });
-  }, [date, files, loadDateData]);
+  }, [date, loadDateData]);
 
   if (loading) {
     return (

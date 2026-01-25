@@ -1,14 +1,28 @@
-import { readdir, writeFile } from "node:fs/promises";
+import { readdir, writeFile, readFile } from "node:fs/promises";
 import { join } from "node:path";
 
 interface DateIndex {
   date: string;
-  files: string[];
 }
 
 interface Index {
   generatedAt: string;
   dates: DateIndex[];
+}
+
+interface DailyData {
+  date: string;
+  generatedAt: string;
+  hours: {
+    [hour: number]: {
+      [spotName: string]: string;
+    };
+  };
+}
+
+interface SpotData {
+  fetchedAt: string;
+  spots: { name: string; status: string }[];
 }
 
 export interface BuildIndexOptions {
@@ -36,12 +50,35 @@ export async function buildIndex(
     if (entry.isDirectory() && /^\d{4}-\d{2}-\d{2}$/.test(entry.name)) {
       const dateDir = join(dataDir, entry.name);
       const files = await readdir(dateDir);
-      const jsonFiles = files.filter((f) => f.endsWith(".json")).sort();
+      const jsonFiles = files
+        .filter((f) => f.endsWith(".json") && f !== "daily.json")
+        .sort();
 
       if (jsonFiles.length > 0) {
+        // daily.jsonを生成
+        const dailyData: DailyData = {
+          date: entry.name,
+          generatedAt: new Date().toISOString(),
+          hours: {},
+        };
+
+        for (const file of jsonFiles) {
+          const content = await readFile(join(dateDir, file), "utf-8");
+          const data: SpotData = JSON.parse(content);
+          const hour = parseInt(file.split("-")[0], 10);
+          dailyData.hours[hour] = {};
+          for (const spot of data.spots) {
+            dailyData.hours[hour][spot.name] = spot.status;
+          }
+        }
+
+        await writeFile(
+          join(dateDir, "daily.json"),
+          JSON.stringify(dailyData, null, 2) + "\n"
+        );
+
         dates.push({
           date: entry.name,
-          files: jsonFiles,
         });
       }
     }

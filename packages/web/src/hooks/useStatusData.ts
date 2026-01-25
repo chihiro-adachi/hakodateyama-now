@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import type { Index, SpotData, DataByHour } from '../types';
+import type { Index, DailyData, DataByHour } from '../types';
 import { TARGET_SPOTS } from '../constants/spots';
-import { extractHour } from '../utils/statusUtils';
 
 async function loadIndex(): Promise<Index> {
   const res = await fetch('data/index.json');
@@ -9,8 +8,8 @@ async function loadIndex(): Promise<Index> {
   return res.json();
 }
 
-async function loadData(path: string): Promise<SpotData | null> {
-  const res = await fetch(path);
+async function loadDailyData(dateStr: string): Promise<DailyData | null> {
+  const res = await fetch(`data/${dateStr}/daily.json`);
   if (!res.ok) return null;
   return res.json();
 }
@@ -26,12 +25,11 @@ export function useStatusData() {
   const [dateDataMap, setDateDataMap] = useState<Map<string, DateData>>(new Map());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const cachedIndex = useRef<Index | null>(null);
+  const dateDataCache = useRef<Map<string, DateData>>(new Map());
 
   useEffect(() => {
     loadIndex()
       .then((idx) => {
-        cachedIndex.current = idx;
         setIndex(idx);
         setLoading(false);
       })
@@ -41,33 +39,30 @@ export function useStatusData() {
       });
   }, []);
 
-  const loadDateData = useCallback(async (dateStr: string, files: string[]): Promise<DateData | null> => {
-    if (dateDataMap.has(dateStr)) {
-      return dateDataMap.get(dateStr)!;
+  const loadDateData = useCallback(async (dateStr: string): Promise<DateData | null> => {
+    if (dateDataCache.current.has(dateStr)) {
+      return dateDataCache.current.get(dateStr)!;
     }
+
+    const dailyData = await loadDailyData(dateStr);
+    if (!dailyData) return null;
 
     const dataByHour: DataByHour = {};
     const allSpots = new Set<string>();
 
-    for (const file of files.sort()) {
-      const data = await loadData(`data/${dateStr}/${file}`);
-      if (data && data.spots) {
-        const hour = extractHour(file);
-        dataByHour[hour] = {};
-        for (const spot of data.spots) {
-          dataByHour[hour][spot.name] = spot.status;
-          allSpots.add(spot.name);
-        }
-      }
+    for (const [hour, spots] of Object.entries(dailyData.hours)) {
+      dataByHour[Number(hour)] = spots;
+      Object.keys(spots).forEach(name => allSpots.add(name));
     }
 
     const spots = TARGET_SPOTS.filter((s) => allSpots.has(s));
     if (spots.length === 0) return null;
 
     const dateData: DateData = { date: dateStr, spots, dataByHour };
-    setDateDataMap((prev) => new Map(prev).set(dateStr, dateData));
+    dateDataCache.current.set(dateStr, dateData);
+    setDateDataMap(new Map(dateDataCache.current));
     return dateData;
-  }, [dateDataMap]);
+  }, []);
 
   return { index, loading, error, loadDateData, dateDataMap };
 }

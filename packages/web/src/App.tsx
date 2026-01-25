@@ -62,7 +62,6 @@ export default function App() {
             <DateSection
               key={dateInfo.date}
               date={dateInfo.date}
-              files={dateInfo.files}
               loadDateData={loadDateData}
             />
           ))

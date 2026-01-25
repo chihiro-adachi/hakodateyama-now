@@ -10,7 +10,6 @@ export interface SpotData {
 
 export interface DateInfo {
   date: string;
-  files: string[];
 }
 
 export interface Index {
@@ -20,5 +19,15 @@ export interface Index {
 export interface DataByHour {
   [hour: number]: {
     [spotName: string]: string;
+  };
+}
+
+export interface DailyData {
+  date: string;
+  generatedAt: string;
+  hours: {
+    [hour: number]: {
+      [spotName: string]: string;
+    };
   };
 }
