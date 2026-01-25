@@ -5,7 +5,7 @@ on:
     branches:
       - main
   workflow_run:
-    workflows: ["Fetch Vacan Status"]
+    workflows: ["Fetch Status"]
     types:
       - completed
     branches:
