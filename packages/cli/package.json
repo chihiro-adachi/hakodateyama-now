@@ -8,8 +8,8 @@
     "build-index": "node src/cli.ts build-index",
     "screenshot": "node src/cli.ts capture-screenshot",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "e2e": "vitest run",
+    "e2e:watch": "vitest"
   },
   "dependencies": {
     "playwright-core": "^1.58.0"

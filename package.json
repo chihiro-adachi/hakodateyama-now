@@ -9,8 +9,8 @@
     "build-index": "pnpm --filter @hakodate/cli build-index",
     "screenshot": "pnpm --filter @hakodate/cli screenshot",
     "typecheck": "pnpm -r typecheck",
-    "test": "pnpm --filter @hakodate/cli test",
-    "test:watch": "pnpm --filter @hakodate/cli test:watch",
+    "e2e": "pnpm --filter @hakodate/cli e2e",
+    "e2e:watch": "pnpm --filter @hakodate/cli e2e:watch",
     "dev": "pnpm --filter @hakodate/web dev",
     "build": "pnpm --filter @hakodate/web build",
     "preview": "pnpm --filter @hakodate/web preview"
