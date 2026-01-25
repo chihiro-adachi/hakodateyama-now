@@ -48,26 +48,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 │   ├── cli/                    # CLIツール (@hakodate/cli)
 │   │   ├── package.json
 │   │   ├── tsconfig.json
-│   │   └── src/
-│   │       ├── fetch-status.ts         # コア関数・型定義
-│   │       ├── build-index.ts          # data/index.json 生成
-│   │       ├── capture-screenshot.ts   # スクリーンショット取得
-│   │       ├── cli.ts                  # 統合CLIエントリポイント
-│   │       └── fetch-status.test.ts
+│   │   ├── src/
+│   │   │   ├── fetch-status.ts         # コア関数・型定義
+│   │   │   ├── build-index.ts          # data/index.json 生成
+│   │   │   ├── capture-screenshot.ts   # スクリーンショット取得
+│   │   │   └── cli.ts                  # 統合CLIエントリポイント
+│   │   └── e2e/
+│   │       └── fetch-status.test.ts    # E2Eテスト（vacan.comにアクセス）
 │   └── web/                    # React SPA (@hakodate/web)
 │       ├── package.json
 │       ├── tsconfig.json
 │       ├── vite.config.ts
 │       ├── index.html
-│       └── src/
-│           ├── main.tsx            # エントリポイント
-│           ├── App.tsx             # ルートコンポーネント
-│           ├── App.css             # スタイル
-│           ├── components/         # UIコンポーネント
-│           ├── hooks/              # カスタムフック
-│           ├── utils/              # ユーティリティ
-│           ├── constants/          # 定数
-│           └── types/              # 型定義
+│       ├── src/
+│       │   ├── main.tsx            # エントリポイント
+│       │   ├── App.tsx             # ルートコンポーネント
+│       │   ├── App.css             # スタイル
+│       │   ├── components/         # UIコンポーネント
+│       │   ├── hooks/              # カスタムフック
+│       │   ├── utils/              # ユーティリティ
+│       │   ├── constants/          # 定数
+│       │   └── types/              # 型定義
+│       └── e2e/
+│           └── app.spec.ts         # E2Eテスト（Playwright）
 ├── data/
 │   ├── index.json              # 日付・ファイル一覧（自動生成）
 │   └── YYYY-MM-DD/
@@ -98,9 +101,10 @@ pnpm run screenshot
 # 型チェック
 pnpm typecheck          # 全パッケージ（cli + web）
 
-# テスト
-pnpm test              # 単発実行（E2Eテスト、実際にvacan.comにアクセス）
-pnpm test:watch        # ウォッチモード
+# E2Eテスト
+pnpm e2e               # 全パッケージ（cli + web）のE2Eテスト実行
+pnpm --filter @hakodate/cli e2e:watch   # CLIテストのウォッチモード
+pnpm --filter @hakodate/web e2e:ui      # Web E2EテストのUIモード
 
 # Web開発
 pnpm dev               # 開発サーバー起動
