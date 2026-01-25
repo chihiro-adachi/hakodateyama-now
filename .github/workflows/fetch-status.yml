@@ -5,6 +5,8 @@ on:
   schedule:
     # JST 10:00-22:00 (UTC 1:00-13:00)
     - cron: '0 1-13 * * *'
+    # JST 14:30 (UTC 5:30) - テスト用
+    - cron: '30 5 * * *'
 
 jobs:
   fetch-status:
