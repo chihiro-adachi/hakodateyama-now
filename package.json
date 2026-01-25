@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "fetch-status": "node src/cli.ts",
-    "build-index": "node scripts/build-index.ts",
-    "screenshot": "node scripts/capture-screenshot.ts",
+    "fetch-status": "node src/cli.ts fetch-status",
+    "build-index": "node src/cli.ts build-index",
+    "screenshot": "node src/cli.ts capture-screenshot",
     "test": "vitest run",
     "test:watch": "vitest"
   },

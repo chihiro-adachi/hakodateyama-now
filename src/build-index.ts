@@ -11,9 +11,22 @@ interface Index {
   dates: DateIndex[];
 }
 
-async function buildIndex(): Promise<void> {
-  const dataDir = join(import.meta.dirname, "..", "data");
+export interface BuildIndexOptions {
+  dataDir?: string;
+  onLog?: (message: string) => void;
+}
+
+export interface BuildIndexResult {
+  outputPath: string;
+  datesCount: number;
+}
+
+export async function buildIndex(
+  options?: BuildIndexOptions
+): Promise<BuildIndexResult> {
+  const dataDir = options?.dataDir ?? join(import.meta.dirname, "..", "data");
   const outputPath = join(dataDir, "index.json");
+  const log = options?.onLog ?? (() => {});
 
   const entries = await readdir(dataDir, { withFileTypes: true });
 
@@ -23,9 +36,7 @@ async function buildIndex(): Promise<void> {
     if (entry.isDirectory() && /^\d{4}-\d{2}-\d{2}$/.test(entry.name)) {
       const dateDir = join(dataDir, entry.name);
       const files = await readdir(dateDir);
-      const jsonFiles = files
-        .filter((f) => f.endsWith(".json"))
-        .sort();
+      const jsonFiles = files.filter((f) => f.endsWith(".json")).sort();
 
       if (jsonFiles.length > 0) {
         dates.push({
@@ -45,11 +56,11 @@ async function buildIndex(): Promise<void> {
   };
 
   await writeFile(outputPath, JSON.stringify(index, null, 2) + "\n");
-  console.log(`Generated ${outputPath}`);
-  console.log(`  ${dates.length} dates indexed`);
-}
+  log(`Generated ${outputPath}`);
+  log(`  ${dates.length} dates indexed`);
 
-buildIndex().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+  return {
+    outputPath,
+    datesCount: dates.length,
+  };
+}
