@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { resolve } from 'path';
+import { resolve, relative } from 'path';
 import { existsSync, readFileSync } from 'fs';
 
 export default defineConfig({
@@ -18,6 +18,13 @@ export default defineConfig({
           if (req.url?.startsWith('/hakodateyama-now/data/')) {
             const relativePath = req.url.replace('/hakodateyama-now/', '');
             const filePath = resolve(__dirname, '..', '..', relativePath);
+
+            // パストラバーサル攻撃を防止: 解決されたパスがdataDir内にあることを確認
+            const relativeFromDataDir = relative(dataDir, filePath);
+            if (relativeFromDataDir.startsWith('..') || relativeFromDataDir.startsWith('/')) {
+              next();
+              return;
+            }
 
             if (!existsSync(filePath)) {
               next();
