@@ -1,4 +1,4 @@
-name: Fetch Vacan Status
+name: Fetch Status
 
 on:
   workflow_dispatch:
