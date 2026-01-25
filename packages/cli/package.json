@@ -1,0 +1,21 @@
+{
+  "name": "@hakodate/cli",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "fetch-status": "node src/cli.ts fetch-status",
+    "build-index": "node src/cli.ts build-index",
+    "screenshot": "node src/cli.ts capture-screenshot",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "playwright-core": "^1.58.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.10",
+    "vitest": "^4.0.18"
+  }
+}

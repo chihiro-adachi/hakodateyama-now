@@ -17,7 +17,7 @@ export async function captureScreenshot(
   const url =
     options?.url ?? "https://chihiro-adachi.github.io/hakodateyama-now/";
   const outputPath =
-    options?.outputPath ?? join(import.meta.dirname, "..", "screenshot.png");
+    options?.outputPath ?? join(import.meta.dirname, "..", "..", "..", "screenshot.png");
   const log = options?.onLog ?? (() => {});
 
   const browser = await chromium.launch({ channel: "chrome" });
@@ -32,7 +32,11 @@ export async function captureScreenshot(
     await page.screenshot({ path: outputPath, fullPage: true });
     log(`Screenshot saved: ${outputPath}`);
   } finally {
-    await browser.close();
+    try {
+      await browser.close();
+    } catch (closeError) {
+      log(`Warning: Failed to close browser: ${closeError}`);
+    }
   }
 
   return { outputPath };

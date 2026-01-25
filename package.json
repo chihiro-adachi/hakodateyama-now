@@ -1,35 +1,21 @@
 {
-  "name": "hakodate-vacan",
-  "version": "1.0.0",
-  "description": "vacan.com 函館エリア混雑状況取得",
-  "type": "module",
-  "scripts": {
-    "typecheck": "tsc --noEmit",
-    "typecheck:web": "tsc --noEmit -p web/tsconfig.json",
-    "fetch-status": "node src/cli.ts fetch-status",
-    "build-index": "node src/cli.ts build-index",
-    "screenshot": "node src/cli.ts capture-screenshot",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "dev": "vite --config web/vite.config.ts",
-    "build": "vite build --config web/vite.config.ts",
-    "preview": "vite preview --config web/vite.config.ts"
-  },
+  "name": "hakodate-monorepo",
+  "private": true,
   "engines": {
     "node": ">=24.0.0"
   },
-  "dependencies": {
-    "playwright-core": "^1.58.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+  "scripts": {
+    "fetch-status": "pnpm --filter @hakodate/cli fetch-status",
+    "build-index": "pnpm --filter @hakodate/cli build-index",
+    "screenshot": "pnpm --filter @hakodate/cli screenshot",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm --filter @hakodate/cli test",
+    "test:watch": "pnpm --filter @hakodate/cli test:watch",
+    "dev": "pnpm --filter @hakodate/web dev",
+    "build": "pnpm --filter @hakodate/web build",
+    "preview": "pnpm --filter @hakodate/web preview"
   },
   "devDependencies": {
-    "@types/node": "^25.0.10",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "@vitejs/plugin-react": "^4.4.1",
-    "typescript": "^5.9.3",
-    "vite": "^6.2.0",
-    "vitest": "^4.0.18"
+    "typescript": "^5.9.3"
   }
 }

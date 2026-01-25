@@ -24,7 +24,7 @@ export interface BuildIndexResult {
 export async function buildIndex(
   options?: BuildIndexOptions
 ): Promise<BuildIndexResult> {
-  const dataDir = options?.dataDir ?? join(import.meta.dirname, "..", "data");
+  const dataDir = options?.dataDir ?? join(import.meta.dirname, "..", "..", "..", "data");
   const outputPath = join(dataDir, "index.json");
   const log = options?.onLog ?? (() => {});
 

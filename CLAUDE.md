@@ -41,25 +41,33 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## ディレクトリ構成
 
 ```
-├── src/                        # CLIツール
-│   ├── fetch-status.ts         # コア関数・型定義
-│   ├── build-index.ts          # data/index.json 生成
-│   ├── capture-screenshot.ts   # スクリーンショット取得
-│   ├── cli.ts                  # 統合CLIエントリポイント
-│   └── fetch-status.test.ts
-├── web/                        # React SPA (Vite)
-│   ├── src/
-│   │   ├── main.tsx            # エントリポイント
-│   │   ├── App.tsx             # ルートコンポーネント
-│   │   ├── App.css             # スタイル
-│   │   ├── components/         # UIコンポーネント
-│   │   ├── hooks/              # カスタムフック
-│   │   ├── utils/              # ユーティリティ
-│   │   ├── constants/          # 定数
-│   │   └── types/              # 型定義
-│   ├── index.html              # Viteテンプレート
-│   ├── vite.config.ts
-│   └── tsconfig.json
+├── pnpm-workspace.yaml         # pnpm workspace設定
+├── package.json                # ルート（共通スクリプト）
+├── tsconfig.base.json          # TypeScript共通設定
+├── packages/
+│   ├── cli/                    # CLIツール (@hakodate/cli)
+│   │   ├── package.json
+│   │   ├── tsconfig.json
+│   │   └── src/
+│   │       ├── fetch-status.ts         # コア関数・型定義
+│   │       ├── build-index.ts          # data/index.json 生成
+│   │       ├── capture-screenshot.ts   # スクリーンショット取得
+│   │       ├── cli.ts                  # 統合CLIエントリポイント
+│   │       └── fetch-status.test.ts
+│   └── web/                    # React SPA (@hakodate/web)
+│       ├── package.json
+│       ├── tsconfig.json
+│       ├── vite.config.ts
+│       ├── index.html
+│       └── src/
+│           ├── main.tsx            # エントリポイント
+│           ├── App.tsx             # ルートコンポーネント
+│           ├── App.css             # スタイル
+│           ├── components/         # UIコンポーネント
+│           ├── hooks/              # カスタムフック
+│           ├── utils/              # ユーティリティ
+│           ├── constants/          # 定数
+│           └── types/              # 型定義
 ├── data/
 │   ├── index.json              # 日付・ファイル一覧（自動生成）
 │   └── YYYY-MM-DD/
@@ -75,7 +83,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 # CLIヘルプ表示
-node src/cli.ts --help
+node packages/cli/src/cli.ts --help
 
 # 混雑状況取得（結果はstdout、ログはstderr）
 pnpm run fetch-status
@@ -88,8 +96,7 @@ pnpm run build-index
 pnpm run screenshot
 
 # 型チェック
-pnpm typecheck          # CLIツール
-pnpm typecheck:web      # React SPA
+pnpm typecheck          # 全パッケージ（cli + web）
 
 # テスト
 pnpm test              # 単発実行（E2Eテスト、実際にvacan.comにアクセス）
@@ -103,19 +110,23 @@ pnpm preview           # ビルド結果プレビュー
 
 ## 主要ファイル
 
-### CLIツール (src/)
-- `src/fetch-status.ts`: スクレイピングのコア関数。ライブラリとしても使用可能
-- `src/build-index.ts`: data/配下をスキャンしてindex.jsonを生成
-- `src/capture-screenshot.ts`: GitHub Pagesのスクリーンショットを取得
-- `src/cli.ts`: 統合CLI（サブコマンド: fetch-status, build-index, capture-screenshot）
+### CLIツール (packages/cli/)
+- `packages/cli/src/fetch-status.ts`: スクレイピングのコア関数。ライブラリとしても使用可能
+- `packages/cli/src/build-index.ts`: data/配下をスキャンしてindex.jsonを生成
+- `packages/cli/src/capture-screenshot.ts`: GitHub Pagesのスクリーンショットを取得
+- `packages/cli/src/cli.ts`: 統合CLI（サブコマンド: fetch-status, build-index, capture-screenshot）
 
-### React SPA (web/)
-- `web/src/App.tsx`: ルートコンポーネント、状態管理
-- `web/src/hooks/useStatusData.ts`: データ取得・キャッシュ
-- `web/src/components/`: Header, HolidayFilter, DateSection, StatusTable, StatusCell
-- `web/vite.config.ts`: Vite設定（開発サーバーでdata/を提供するミドルウェア含む）
+### React SPA (packages/web/)
+- `packages/web/src/App.tsx`: ルートコンポーネント、状態管理
+- `packages/web/src/hooks/useStatusData.ts`: データ取得・キャッシュ
+- `packages/web/src/components/`: Header, HolidayFilter, DateSection, StatusTable, StatusCell
+- `packages/web/vite.config.ts`: Vite設定（開発サーバーでdata/を提供するミドルウェア含む）
 
 ## 技術スタック
+
+### モノレポ構成
+- pnpm workspace（2パッケージ: @hakodate/cli, @hakodate/web）
+- 共有コードなし（JSONデータ経由で連携）
 
 ### CLIツール
 - Node.js 24 + pnpm 10（mise管理）
