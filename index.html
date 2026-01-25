@@ -195,18 +195,14 @@
   </div>
 
   <script>
-    const BASE_URL = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
-      ? ''
-      : '';
-
     async function loadIndex() {
-      const res = await fetch(`${BASE_URL}data/index.json`);
+      const res = await fetch('data/index.json');
       if (!res.ok) throw new Error('index.json not found');
       return res.json();
     }
 
     async function loadData(path) {
-      const res = await fetch(`${BASE_URL}${path}`);
+      const res = await fetch(path);
       if (!res.ok) return null;
       return res.json();
     }
