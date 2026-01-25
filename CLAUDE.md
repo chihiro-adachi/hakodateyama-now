@@ -20,10 +20,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│  GitHub Pages (自動デプロイ)                                 │
+│  GitHub Actions (mainブランチ push時)                        │
+│  .github/workflows/deploy.yml                               │
+│                                                             │
+│  1. pnpm build → dist/ (React SPA)                         │
+│  2. data/, favicon.ico を dist/ にコピー                    │
+│  3. GitHub Pages にデプロイ                                  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  GitHub Pages                                               │
 │  https://chihiro-adachi.github.io/hakodateyama-now/         │
 │                                                             │
-│  index.html が data/index.json を読み込み                    │
+│  React SPA が data/index.json を読み込み                     │
 │  → 各日付の JSON を fetch して表形式で表示                    │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -31,20 +41,34 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## ディレクトリ構成
 
 ```
-├── src/
-│   ├── fetch-status.ts      # コア関数・型定義
-│   ├── build-index.ts       # data/index.json 生成
-│   ├── capture-screenshot.ts # スクリーンショット取得
-│   ├── cli.ts               # 統合CLIエントリポイント
+├── src/                        # CLIツール
+│   ├── fetch-status.ts         # コア関数・型定義
+│   ├── build-index.ts          # data/index.json 生成
+│   ├── capture-screenshot.ts   # スクリーンショット取得
+│   ├── cli.ts                  # 統合CLIエントリポイント
 │   └── fetch-status.test.ts
+├── web/                        # React SPA (Vite)
+│   ├── src/
+│   │   ├── main.tsx            # エントリポイント
+│   │   ├── App.tsx             # ルートコンポーネント
+│   │   ├── App.css             # スタイル
+│   │   ├── components/         # UIコンポーネント
+│   │   ├── hooks/              # カスタムフック
+│   │   ├── utils/              # ユーティリティ
+│   │   ├── constants/          # 定数
+│   │   └── types/              # 型定義
+│   ├── index.html              # Viteテンプレート
+│   ├── vite.config.ts
+│   └── tsconfig.json
 ├── data/
-│   ├── index.json           # 日付・ファイル一覧（自動生成）
+│   ├── index.json              # 日付・ファイル一覧（自動生成）
 │   └── YYYY-MM-DD/
-│       └── HH-00.json       # 混雑状況データ
-├── index.html               # GitHub Pages 可視化ページ
+│       └── HH-00.json          # 混雑状況データ
+├── dist/                       # ビルド出力（.gitignore）
 └── .github/workflows/
-    ├── fetch-status.yml     # 毎時データ収集
-    └── ci.yml               # テスト・型チェック
+    ├── fetch-status.yml        # 毎時データ収集
+    ├── deploy.yml              # GitHub Pagesデプロイ
+    └── ci.yml                  # テスト・型チェック
 ```
 
 ## コマンド
@@ -64,27 +88,45 @@ pnpm run build-index
 pnpm run screenshot
 
 # 型チェック
-pnpm typecheck
+pnpm typecheck          # CLIツール
+pnpm typecheck:web      # React SPA
 
 # テスト
 pnpm test              # 単発実行（E2Eテスト、実際にvacan.comにアクセス）
 pnpm test:watch        # ウォッチモード
+
+# Web開発
+pnpm dev               # 開発サーバー起動
+pnpm build             # 本番ビルド → dist/
+pnpm preview           # ビルド結果プレビュー
 ```
 
 ## 主要ファイル
 
+### CLIツール (src/)
 - `src/fetch-status.ts`: スクレイピングのコア関数。ライブラリとしても使用可能
 - `src/build-index.ts`: data/配下をスキャンしてindex.jsonを生成
 - `src/capture-screenshot.ts`: GitHub Pagesのスクリーンショットを取得
 - `src/cli.ts`: 統合CLI（サブコマンド: fetch-status, build-index, capture-screenshot）
-- `index.html`: GitHub Pages用。JSでJSONを読み込み表形式で表示
+
+### React SPA (web/)
+- `web/src/App.tsx`: ルートコンポーネント、状態管理
+- `web/src/hooks/useStatusData.ts`: データ取得・キャッシュ
+- `web/src/components/`: Header, HolidayFilter, DateSection, StatusTable, StatusCell
+- `web/vite.config.ts`: Vite設定（開発サーバーでdata/を提供するミドルウェア含む）
 
 ## 技術スタック
 
+### CLIツール
 - Node.js 24 + pnpm 10（mise管理）
 - TypeScript（Node.jsで直接実行、ビルド不要）
 - playwright-core（`channel: 'chrome'`でシステムのChromeを使用）
 - vitest（テスト）
+
+### React SPA
+- React 19 + TypeScript
+- Vite（ビルド・開発サーバー）
+- GitHub Pages（ホスティング）
 
 ## スクレイピング対象
 
