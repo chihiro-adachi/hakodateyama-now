@@ -1,4 +1,4 @@
-name: Test
+name: E2E
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  e2e:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,8 +20,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium webkit
+
       - name: Type check
         run: pnpm typecheck
 
-      - name: Run tests
-        run: pnpm test
+      - name: Run E2E tests
+        run: pnpm e2e
