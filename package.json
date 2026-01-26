@@ -12,9 +12,12 @@
     "e2e": "pnpm -r e2e",
     "dev": "pnpm --filter @hakodate/web dev",
     "build": "pnpm --filter @hakodate/web build",
-    "preview": "pnpm --filter @hakodate/web preview"
+    "preview": "pnpm --filter @hakodate/web preview",
+    "cron:dev": "pnpm --filter @hakodate/cron dev",
+    "cron:deploy": "pnpm --filter @hakodate/cron deploy"
   },
   "devDependencies": {
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   }
 }

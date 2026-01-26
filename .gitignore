@@ -5,3 +5,11 @@ dist/
 # Playwright
 playwright-report/
 test-results/
+
+# Cloudflare Workers
+.dev.vars
+.wrangler/
+
+# Environment variables
+.env
+.env.*

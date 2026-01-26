@@ -10,7 +10,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  GitHub Actions (毎時 JST 10:00-22:00)                       │
+│  Cloudflare Workers (Cron Triggers)                         │
+│  packages/cron/                                             │
+│                                                             │
+│  毎時 JST 10:00-22:00 (UTC 1:00-13:00)                       │
+│  → GitHub API で workflow_dispatch を発火                    │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  GitHub Actions (workflow_dispatch)                          │
 │  .github/workflows/fetch-status.yml                         │
 │                                                             │
 │  1. pnpm run fetch-status → data/YYYY-MM-DD/HH-00.json     │
@@ -55,6 +64,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 │   │   │   └── cli.ts                  # 統合CLIエントリポイント
 │   │   └── e2e/
 │   │       └── fetch-status.test.ts    # E2Eテスト（vacan.comにアクセス）
+│   ├── cron/                   # Cloudflare Workers (@hakodate/cron)
+│   │   ├── package.json
+│   │   ├── tsconfig.json
+│   │   ├── wrangler.toml       # Cron Triggers 設定
+│   │   └── src/
+│   │       ├── index.ts        # scheduled ハンドラ
+│   │       └── index.test.ts   # ユニットテスト
 │   └── web/                    # React SPA (@hakodate/web)
 │       ├── package.json
 │       ├── tsconfig.json
@@ -110,6 +126,11 @@ pnpm --filter @hakodate/web e2e:ui      # Web E2EテストのUIモード
 pnpm dev               # 開発サーバー起動
 pnpm build             # 本番ビルド → dist/
 pnpm preview           # ビルド結果プレビュー
+
+# Cloudflare Workers (Cron)
+pnpm cron:dev          # ローカル開発サーバー
+pnpm cron:deploy       # Cloudflare にデプロイ
+pnpm --filter @hakodate/cron test  # ユニットテスト
 ```
 
 ## 主要ファイル
@@ -126,10 +147,14 @@ pnpm preview           # ビルド結果プレビュー
 - `packages/web/src/components/`: Header, HolidayFilter, DateSection, StatusTable, StatusCell
 - `packages/web/vite.config.ts`: Vite設定（開発サーバーでdata/を提供するミドルウェア含む）
 
+### Cloudflare Workers (packages/cron/)
+- `packages/cron/src/index.ts`: scheduled イベントハンドラ、指数バックオフ付きリトライ
+- `packages/cron/wrangler.toml`: Cron Triggers 設定（UTC 1:00-13:00 = JST 10:00-22:00）
+
 ## 技術スタック
 
 ### モノレポ構成
-- pnpm workspace（2パッケージ: @hakodate/cli, @hakodate/web）
+- pnpm workspace（3パッケージ: @hakodate/cli, @hakodate/web, @hakodate/cron）
 - 共有コードなし（JSONデータ経由で連携）
 
 ### CLIツール
@@ -142,6 +167,10 @@ pnpm preview           # ビルド結果プレビュー
 - React 19 + TypeScript
 - Vite（ビルド・開発サーバー）
 - GitHub Pages（ホスティング）
+
+### Cloudflare Workers
+- Cron Triggers（スケジュール実行）
+- wrangler（デプロイ・ローカル開発）
 
 ## スクレイピング対象
 
