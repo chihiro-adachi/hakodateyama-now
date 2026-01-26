@@ -1,0 +1,13 @@
+name: Test Cron
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'  # 30分ごと
+  workflow_dispatch:  # 手動実行用
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hello World
+        run: echo "Hello World! $(date)"
