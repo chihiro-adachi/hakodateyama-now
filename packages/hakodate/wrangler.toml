@@ -3,6 +3,9 @@ main = "src/index.ts"
 compatibility_date = "2025-01-26"
 compatibility_flags = ["nodejs_compat_v2"]
 
+[assets]
+directory = "./public"
+
 [browser]
 binding = "BROWSER"
 remote = true
