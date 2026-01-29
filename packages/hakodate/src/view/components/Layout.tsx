@@ -1,5 +1,4 @@
 import type { Child } from 'hono/jsx';
-import { styles } from '../styles';
 
 interface LayoutProps {
   children: Child;
@@ -13,8 +12,8 @@ export function Layout({ children }: LayoutProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="stylesheet" href="/styles.css" />
         <title>函館山混雑状況</title>
-        <style dangerouslySetInnerHTML={{ __html: styles }} />
       </head>
       <body>
         {children}
