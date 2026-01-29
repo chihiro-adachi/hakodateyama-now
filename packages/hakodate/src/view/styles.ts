@@ -1,6 +1,7 @@
 export const styles = `
 * {
   box-sizing: border-box;
+  font-family: inherit;
 }
 
 body {
