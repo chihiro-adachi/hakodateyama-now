@@ -225,7 +225,7 @@ th.time-col {
 
   table {
     min-width: auto;
-    font-size: 11px;
+    font-size: 12px;
   }
 
   th,
