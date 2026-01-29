@@ -1,11 +1,10 @@
 export const styles = `
 * {
   box-sizing: border-box;
-  font-family: inherit;
 }
 
 body {
-  font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Meiryo, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   margin: 0;
   padding: 20px;
   background: #f5f5f5;
