@@ -1,0 +1,16 @@
+name = "hakodate"
+main = "src/index.ts"
+compatibility_date = "2025-01-26"
+compatibility_flags = ["nodejs_compat_v2"]
+
+[browser]
+binding = "BROWSER"
+
+[triggers]
+# JST 10:00-22:00 (UTC 1:00-13:00) に1時間ごとに実行
+crons = ["0 1-13 * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hakodate"
+database_id = "549afc23-e0ed-4446-8190-cbd055db06be"
