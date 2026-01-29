@@ -7,9 +7,10 @@ const VIEWPORT = { width: 1920, height: 1080 };
 
 export async function fetchStatus(browserBinding: BrowserWorker): Promise<SidebarData> {
   const browser = await puppeteer.launch(browserBinding);
+  let page: Awaited<ReturnType<typeof browser.newPage>> | null = null;
 
   try {
-    const page = await browser.newPage();
+    page = await browser.newPage();
     await page.setViewport(VIEWPORT);
 
     console.log(`Navigating to: ${TARGET_URL}`);
@@ -34,24 +35,49 @@ export async function fetchStatus(browserBinding: BrowserWorker): Promise<Sideba
       console.warn('Timed out waiting for .vacancy-text elements');
     }
 
-    const { spots, warnings } = await page.evaluate(() => {
+    const { spots, warnings, debugInfo } = await page.evaluate(() => {
       const results: { name: string; status: string }[] = [];
       const warns: string[] = [];
+      const debug: {
+        cardCount: number;
+        cards: {
+          index: number;
+          name: string | null;
+          hasStatusEl: boolean;
+          statusElOuterHTML: string | null;
+          rawStatus: string | null;
+          finalStatus: string;
+        }[];
+      } = { cardCount: 0, cards: [] };
 
       const spotCards = document.querySelectorAll('article.card-view');
+      debug.cardCount = spotCards.length;
 
       spotCards.forEach((card, index) => {
         const nameEl = card.querySelector('.place-name');
         const statusEl = card.querySelector('.vacancy-text');
 
+        const cardDebug = {
+          index,
+          name: nameEl?.textContent?.trim() || null,
+          hasStatusEl: !!statusEl,
+          statusElOuterHTML: statusEl?.outerHTML?.slice(0, 200) || null,
+          rawStatus: statusEl?.textContent?.trim() || null,
+          finalStatus: '',
+        };
+
         if (!nameEl) {
           warns.push(`Card ${index}: missing .place-name element`);
+          cardDebug.finalStatus = '(skipped - no nameEl)';
+          debug.cards.push(cardDebug);
           return;
         }
 
         const name = nameEl.textContent?.trim() || '';
         if (!name) {
           warns.push(`Card ${index}: .place-name has no text`);
+          cardDebug.finalStatus = '(skipped - empty name)';
+          debug.cards.push(cardDebug);
           return;
         }
 
@@ -63,11 +89,23 @@ export async function fetchStatus(browserBinding: BrowserWorker): Promise<Sideba
         const rawStatus = statusEl?.textContent?.trim();
         const status = rawStatus ? rawStatus.replace(/\s+/g, '') : '不明';
 
+        cardDebug.finalStatus = status;
+        debug.cards.push(cardDebug);
         results.push({ name, status });
       });
 
-      return { spots: results, warnings: warns };
+      return { spots: results, warnings: warns, debugInfo: debug };
     });
+
+    console.log('=== Debug Info ===');
+    console.log(`Total cards found: ${debugInfo.cardCount}`);
+    for (const card of debugInfo.cards) {
+      console.log(`Card ${card.index}: name="${card.name}", hasStatusEl=${card.hasStatusEl}, rawStatus="${card.rawStatus}", finalStatus="${card.finalStatus}"`);
+      if (card.statusElOuterHTML) {
+        console.log(`  statusEl HTML: ${card.statusElOuterHTML}`);
+      }
+    }
+    console.log('=== End Debug Info ===');
 
     for (const warn of warnings) {
       console.warn(warn);
@@ -87,6 +125,13 @@ export async function fetchStatus(browserBinding: BrowserWorker): Promise<Sideba
       spots,
     };
   } finally {
+    try {
+      if (page) {
+        await page.close();
+      }
+    } catch (closeError) {
+      console.warn('Failed to close page:', closeError);
+    }
     try {
       await browser.close();
     } catch (closeError) {

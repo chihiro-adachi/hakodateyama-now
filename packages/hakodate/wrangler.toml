@@ -8,8 +8,9 @@ binding = "BROWSER"
 remote = true
 
 [triggers]
-# JST 10:00-22:00 (UTC 1:00-13:00) に1時間ごとに実行
 crons = ["0 1-13 * * *"]
+# デバッグ用: 5分ごとに実行
+# crons = ["*/5 * * * *"]
 
 [[d1_databases]]
 binding = "DB"
