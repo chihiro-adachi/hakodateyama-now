@@ -18,6 +18,22 @@ export async function fetchStatus(browserBinding: BrowserWorker): Promise<Sideba
     console.log('Waiting for content...');
     await page.waitForSelector('article.card-view', { timeout: 10000 });
 
+    try {
+      await page.waitForFunction(
+        () => {
+          const cards = document.querySelectorAll('article.card-view');
+          if (cards.length === 0) return false;
+          const readyCount = Array.from(cards).filter((card) =>
+            card.querySelector('.vacancy-text')
+          ).length;
+          return readyCount === cards.length;
+        },
+        { timeout: 8000 }
+      );
+    } catch {
+      console.warn('Timed out waiting for .vacancy-text elements');
+    }
+
     const { spots, warnings } = await page.evaluate(() => {
       const results: { name: string; status: string }[] = [];
       const warns: string[] = [];
@@ -40,7 +56,8 @@ export async function fetchStatus(browserBinding: BrowserWorker): Promise<Sideba
         }
 
         if (!statusEl) {
-          warns.push(`"${name}": missing .vacancy-text element`);
+          const snippet = card.textContent?.trim().replace(/\s+/g, ' ').slice(0, 80);
+          warns.push(`"${name}": missing .vacancy-text element${snippet ? ` (text: ${snippet}...)` : ''}`);
         }
 
         const rawStatus = statusEl?.textContent?.trim();
