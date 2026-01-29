@@ -24,15 +24,16 @@ export async function fetchStatus(browserBinding: BrowserWorker): Promise<Sideba
         () => {
           const cards = document.querySelectorAll('article.card-view');
           if (cards.length === 0) return false;
-          const readyCount = Array.from(cards).filter((card) =>
-            card.querySelector('.vacancy-text')
-          ).length;
+          const readyCount = Array.from(cards).filter((card) => {
+            const vacancyText = card.querySelector('.vacancy-text');
+            return vacancyText && vacancyText.textContent?.trim();
+          }).length;
           return readyCount === cards.length;
         },
-        { timeout: 8000 }
+        { timeout: 15000 }
       );
     } catch {
-      console.warn('Timed out waiting for .vacancy-text elements');
+      console.warn('Timed out waiting for .vacancy-text content');
     }
 
     const { spots, warnings, debugInfo } = await page.evaluate(() => {
