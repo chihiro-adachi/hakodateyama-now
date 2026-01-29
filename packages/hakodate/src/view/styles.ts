@@ -100,6 +100,14 @@ th.time-col {
   background: #f8f9fa;
 }
 
+/* スポット名の表示切り替え（デスクトップ） */
+.spot-short {
+  display: none;
+}
+.spot-full {
+  display: inline;
+}
+
 /* 混雑状況の色分け */
 .status-空いています {
   background: #d4edda;
@@ -186,13 +194,13 @@ th.time-col {
 
   h1 {
     font-size: 1.3rem;
-    margin-top: 40px;
+    margin-top: 0;
   }
 
   .header-links {
-    top: 10px;
-    right: 10px;
-    gap: 8px;
+    position: static;
+    justify-content: center;
+    margin-bottom: 10px;
   }
 
   .header-links svg {
@@ -206,7 +214,7 @@ th.time-col {
   }
 
   .date-section {
-    padding: 12px;
+    padding: 10px;
     border-radius: 6px;
   }
 
@@ -217,12 +225,25 @@ th.time-col {
 
   table {
     min-width: auto;
-    font-size: 12px;
+    font-size: 11px;
   }
 
   th,
   td {
-    padding: 6px 4px;
+    padding: 4px 2px;
+  }
+
+  td.time-col,
+  th.time-col {
+    min-width: 45px;
+  }
+
+  /* スポット名の表示切り替え（モバイル） */
+  .spot-short {
+    display: inline;
+  }
+  .spot-full {
+    display: none;
   }
 
   .filter label {

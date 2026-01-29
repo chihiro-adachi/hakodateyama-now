@@ -1,4 +1,4 @@
-import { HOURS } from '../../constants/spots';
+import { HOURS, SHORT_NAMES } from '../../constants/spots';
 import type { DataByHour } from '../../types';
 import { StatusCell } from './StatusCell';
 
@@ -14,7 +14,10 @@ export function StatusTable({ spots, dataByHour }: StatusTableProps) {
         <tr>
           <th class="time-col">時間</th>
           {spots.map((spot) => (
-            <th>{spot}</th>
+            <th>
+              <span class="spot-full">{spot}</span>
+              <span class="spot-short">{SHORT_NAMES[spot] || spot}</span>
+            </th>
           ))}
         </tr>
       </thead>
