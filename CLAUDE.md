@@ -40,6 +40,10 @@ pnpm typecheck
 pnpm lint
 pnpm lint:fix
 
+# Format
+pnpm format
+pnpm format:check
+
 # テスト
 pnpm test
 
