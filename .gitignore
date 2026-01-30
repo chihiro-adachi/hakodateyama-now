@@ -6,6 +6,9 @@ dist/
 playwright-report/
 test-results/
 
+# Vitest
+coverage/
+
 # Cloudflare Workers
 .dev.vars
 .wrangler/

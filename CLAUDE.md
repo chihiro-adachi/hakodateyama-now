@@ -47,6 +47,9 @@ pnpm format:check
 # テスト
 pnpm test
 
+# カバレッジ
+pnpm test:coverage
+
 # D1操作（ローカル）
 wrangler d1 execute hakodate --local --command "SELECT * FROM status_snapshots"
 
