@@ -13,9 +13,11 @@
     "format": "pnpm --filter @hakodate/hakodate format",
     "format:check": "pnpm --filter @hakodate/hakodate format:check",
     "test": "pnpm --filter @hakodate/hakodate test",
-    "test:coverage": "pnpm --filter @hakodate/hakodate test:coverage"
+    "test:coverage": "pnpm --filter @hakodate/hakodate test:coverage",
+    "e2e": "pnpm --filter @hakodate/hakodate e2e"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.0",
     "@vitest/coverage-v8": "^4.0.18",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"

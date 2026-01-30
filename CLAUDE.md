@@ -50,6 +50,9 @@ pnpm test
 # カバレッジ
 pnpm test:coverage
 
+# E2Eテスト
+pnpm e2e
+
 # D1操作（ローカル）
 wrangler d1 execute hakodate --local --command "SELECT * FROM status_snapshots"
 
@@ -91,47 +94,28 @@ wrangler d1 execute hakodate --remote --command "SELECT * FROM status_snapshots"
 
 ## テスト方針
 
-### 概要
+### テスト階層と役割
 
-- **フレームワーク**: vitest v4
+| レイヤー | フレームワーク | 役割 | 実行コマンド |
+|----------|---------------|------|--------------|
+| Unit | Vitest | ロジックの正確性を検証 | `pnpm test` |
+| E2E | Playwright | ユーザー視点での動作を検証 | `pnpm e2e` |
+
+### ユニットテスト
+
 - **配置**: コロケーション方式（テスト対象と同じディレクトリに `.test.ts`）
 - **実行**: `pnpm test` / `pnpm test:watch`
 
-### テスト対象の優先度
+#### 対象の優先度
 
 | 優先度 | 対象 | 方針 |
 |--------|------|------|
 | 高 | 純粋関数（transform, utils） | 必ずテストを書く |
 | 中 | DB操作（db/index.ts） | D1をモックしてテスト |
-| 低 | エントリポイント（index.ts） | 統合テストでカバー |
-| 対象外 | スクレイパー（scraper/） | E2Eでカバー |
+| 対象外 | スクレイパー（scraper/） | 外部依存のためスキップ |
 
-### D1モックパターン
+### E2Eテスト
 
-```typescript
-const mockDb = {
-  prepare: vi.fn().mockReturnValue({
-    bind: vi.fn().mockReturnValue({
-      run: vi.fn().mockResolvedValue({ success: true }),
-      all: vi.fn().mockResolvedValue({ results: [] }),
-    }),
-  }),
-} as unknown as D1Database;
-```
-
-### ファイル構成
-
-```
-src/
-├── transform/
-│   ├── index.ts
-│   └── index.test.ts
-├── view/utils/
-│   ├── dateUtils.ts
-│   ├── dateUtils.test.ts
-│   ├── statusUtils.ts
-│   └── statusUtils.test.ts
-└── db/
-    ├── index.ts
-    └── index.test.ts
-```
+- **配置**: `e2e/` ディレクトリに `.spec.ts`
+- **実行**: `pnpm e2e`
+- **前提**: テストデータが登録されていること（平日・休日の両方）
