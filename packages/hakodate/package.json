@@ -4,9 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "pnpm build:islands && wrangler dev",
-    "deploy": "pnpm build:islands && wrangler deploy",
-    "build:islands": "esbuild src/view/islands/client.tsx --bundle --minify --format=esm --outfile=public/islands.js --jsx=automatic --jsx-import-source=hono/jsx",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
@@ -17,7 +16,6 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250124.0",
-    "esbuild": "^0.24.2",
     "typescript": "^5.8.2",
     "vitest": "^3.0.5"
   }

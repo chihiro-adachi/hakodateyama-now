@@ -17,7 +17,6 @@ export function Layout({ children }: LayoutProps) {
       </head>
       <body>
         {children}
-        <script type="module" src="/islands.js"></script>
       </body>
     </html>
   );
