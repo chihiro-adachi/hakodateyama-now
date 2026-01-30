@@ -3,6 +3,8 @@ import { Layout } from './components/Layout';
 import { Header } from './components/Header';
 import { DateSection } from './components/DateSection';
 import type { DateData } from '../types';
+import { Island } from './components/Island';
+import { Counter } from './islands/Counter';
 
 interface AppProps {
   data: DateData[];
@@ -12,6 +14,8 @@ function App({ data }: AppProps) {
   return (
     <Layout>
       <Header />
+      {/* <Island component={Counter} /> */}
+      <div data-island="Counter"></div>
       {data.length === 0 ? (
         <div class="no-data">データがありません</div>
       ) : (
