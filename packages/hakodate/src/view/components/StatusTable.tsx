@@ -1,6 +1,6 @@
-import { HOURS, SHORT_NAMES } from '../../constants/spots';
-import type { DataByHour } from '../../types';
-import { StatusCell } from './StatusCell';
+import { HOURS, SHORT_NAMES } from "../../constants/spots";
+import type { DataByHour } from "../../types";
+import { StatusCell } from "./StatusCell";
 
 interface StatusTableProps {
   spots: string[];
@@ -26,7 +26,7 @@ export function StatusTable({ spots, dataByHour }: StatusTableProps) {
           <tr key={hour}>
             <td class="time-col">{hour}時</td>
             {spots.map((spot) => {
-              const status = dataByHour[hour]?.[spot] || '-';
+              const status = dataByHour[hour]?.[spot] || "-";
               return <StatusCell key={`${hour}-${spot}`} status={status} />;
             })}
           </tr>

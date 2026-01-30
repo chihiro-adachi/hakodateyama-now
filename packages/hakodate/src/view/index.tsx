@@ -1,9 +1,9 @@
-import type { HtmlEscapedString } from 'hono/utils/html';
-import { Layout } from './components/Layout';
-import { Header } from './components/Header';
-import { HolidayFilter } from './components/HolidayFilter';
-import { DateSection } from './components/DateSection';
-import type { DateData } from '../types';
+import type { HtmlEscapedString } from "hono/utils/html";
+import { Layout } from "./components/Layout";
+import { Header } from "./components/Header";
+import { HolidayFilter } from "./components/HolidayFilter";
+import { DateSection } from "./components/DateSection";
+import type { DateData } from "../types";
 
 interface AppProps {
   data: DateData[];
@@ -40,7 +40,9 @@ function ErrorPage() {
       <Header />
       <div class="no-data">
         <h2>エラーが発生しました</h2>
-        <p>データの読み込みに失敗しました。しばらくしてから再度お試しください。</p>
+        <p>
+          データの読み込みに失敗しました。しばらくしてから再度お試しください。
+        </p>
       </div>
     </Layout>
   );

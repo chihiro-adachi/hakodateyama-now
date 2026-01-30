@@ -1,9 +1,9 @@
-import { raw } from 'hono/html';
+import { raw } from "hono/html";
 
 function filterHoliday(checked: boolean) {
-  document.querySelectorAll<HTMLElement>('.date-section').forEach((section) => {
-    const isHoliday = section.dataset.holiday === 'true';
-    section.style.display = checked && !isHoliday ? 'none' : '';
+  document.querySelectorAll<HTMLElement>(".date-section").forEach((section) => {
+    const isHoliday = section.dataset.holiday === "true";
+    section.style.display = checked && !isHoliday ? "none" : "";
   });
 }
 

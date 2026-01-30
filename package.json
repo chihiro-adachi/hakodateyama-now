@@ -10,6 +10,8 @@
     "typecheck": "pnpm --filter @hakodate/hakodate typecheck",
     "lint": "pnpm --filter @hakodate/hakodate lint",
     "lint:fix": "pnpm --filter @hakodate/hakodate lint:fix",
+    "format": "pnpm --filter @hakodate/hakodate format",
+    "format:check": "pnpm --filter @hakodate/hakodate format:check",
     "test": "pnpm --filter @hakodate/hakodate test"
   },
   "devDependencies": {

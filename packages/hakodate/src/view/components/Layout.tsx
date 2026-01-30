@@ -1,4 +1,4 @@
-import type { Child } from 'hono/jsx';
+import type { Child } from "hono/jsx";
 
 interface LayoutProps {
   children: Child;
@@ -15,9 +15,7 @@ export function Layout({ children }: LayoutProps) {
         <link rel="stylesheet" href="/styles.css" />
         <title>函館山混雑状況</title>
       </head>
-      <body>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

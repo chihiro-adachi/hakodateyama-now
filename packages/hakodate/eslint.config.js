@@ -2,9 +2,11 @@ import eslint from '@eslint/js';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsparser from '@typescript-eslint/parser';
 import globals from 'globals';
+import prettier from 'eslint-config-prettier';
 
 export default [
   eslint.configs.recommended,
+  prettier,
   {
     files: ['src/**/*.ts', 'src/**/*.tsx'],
     languageOptions: {

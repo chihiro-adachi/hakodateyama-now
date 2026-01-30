@@ -1,5 +1,5 @@
-import type { StatusSnapshot, Spot, DateData } from '../types';
-import { TARGET_SPOTS } from '../constants/spots';
+import type { StatusSnapshot, Spot, DateData } from "../types";
+import { TARGET_SPOTS } from "../constants/spots";
 
 function extractHour(timestamp: string): number | null {
   const match = timestamp.match(/T(\d{2}):/);
@@ -11,7 +11,7 @@ function extractHour(timestamp: string): number | null {
 }
 
 function extractDate(timestamp: string): string {
-  return timestamp.split('T')[0];
+  return timestamp.split("T")[0];
 }
 
 interface GroupedData {

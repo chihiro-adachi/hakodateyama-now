@@ -1,12 +1,15 @@
-import type { StatusSnapshot, DateData, SidebarData } from '../types';
-import { groupSnapshotsByDate } from '../transform';
+import type { StatusSnapshot, DateData, SidebarData } from "../types";
+import { groupSnapshotsByDate } from "../transform";
 
 const MAX_SNAPSHOTS = 1000;
 
-export async function saveStatusSnapshot(db: D1Database, data: SidebarData): Promise<void> {
+export async function saveStatusSnapshot(
+  db: D1Database,
+  data: SidebarData,
+): Promise<void> {
   try {
     await db
-      .prepare('INSERT INTO status_snapshots (timestamp, spots) VALUES (?, ?)')
+      .prepare("INSERT INTO status_snapshots (timestamp, spots) VALUES (?, ?)")
       .bind(data.timestamp, JSON.stringify(data.spots))
       .run();
   } catch (error) {
@@ -18,7 +21,9 @@ export async function saveStatusSnapshot(db: D1Database, data: SidebarData): Pro
 export async function getStatusData(db: D1Database): Promise<DateData[]> {
   try {
     const result = await db
-      .prepare('SELECT id, timestamp, spots FROM status_snapshots ORDER BY timestamp DESC LIMIT ?')
+      .prepare(
+        "SELECT id, timestamp, spots FROM status_snapshots ORDER BY timestamp DESC LIMIT ?",
+      )
       .bind(MAX_SNAPSHOTS)
       .all<StatusSnapshot>();
 
