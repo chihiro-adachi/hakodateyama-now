@@ -12,7 +12,9 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   webServer: {
-    command: "pnpm dev --port 8799",
+    command: process.env.CI
+      ? "wrangler dev --local --port 8799"
+      : "pnpm dev --port 8799",
     url: "http://localhost:8799",
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
