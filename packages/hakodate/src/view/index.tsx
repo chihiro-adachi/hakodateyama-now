@@ -19,6 +19,7 @@ function App({ data }: AppProps) {
       ) : (
         data.map((dateData) => (
           <DateSection
+            key={dateData.date}
             date={dateData.date}
             spots={dateData.spots}
             dataByHour={dateData.dataByHour}

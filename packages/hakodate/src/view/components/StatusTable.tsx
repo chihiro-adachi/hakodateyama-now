@@ -14,7 +14,7 @@ export function StatusTable({ spots, dataByHour }: StatusTableProps) {
         <tr>
           <th class="time-col">時間</th>
           {spots.map((spot) => (
-            <th>
+            <th key={spot}>
               <span class="spot-full">{spot}</span>
               <span class="spot-short">{SHORT_NAMES[spot] || spot}</span>
             </th>
@@ -23,11 +23,11 @@ export function StatusTable({ spots, dataByHour }: StatusTableProps) {
       </thead>
       <tbody>
         {HOURS.map((hour) => (
-          <tr>
+          <tr key={hour}>
             <td class="time-col">{hour}時</td>
             {spots.map((spot) => {
               const status = dataByHour[hour]?.[spot] || '-';
-              return <StatusCell status={status} />;
+              return <StatusCell key={`${hour}-${spot}`} status={status} />;
             })}
           </tr>
         ))}

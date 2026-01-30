@@ -32,8 +32,12 @@ export async function fetchStatus(browserBinding: BrowserWorker): Promise<Sideba
         },
         { timeout: 15000 }
       );
-    } catch {
-      console.warn('Timed out waiting for .vacancy-text content');
+    } catch (error) {
+      if (error instanceof Error && error.name === 'TimeoutError') {
+        console.warn('Timed out waiting for .vacancy-text content - proceeding with available data');
+      } else {
+        throw error;
+      }
     }
 
     const { spots, warnings, debugInfo } = await page.evaluate(() => {
