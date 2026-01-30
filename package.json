@@ -5,16 +5,10 @@
     "node": ">=24.0.0"
   },
   "scripts": {
-    "fetch-status": "pnpm --filter @hakodate/cli fetch-status",
-    "build-index": "pnpm --filter @hakodate/cli build-index",
-    "screenshot": "pnpm --filter @hakodate/cli screenshot",
-    "typecheck": "pnpm -r typecheck",
-    "e2e": "pnpm -r e2e",
-    "dev": "pnpm --filter @hakodate/web dev",
-    "build": "pnpm --filter @hakodate/web build",
-    "preview": "pnpm --filter @hakodate/web preview",
-    "cron:dev": "pnpm --filter @hakodate/cron dev",
-    "cron:deploy": "pnpm --filter @hakodate/cron deploy"
+    "dev": "pnpm --filter @hakodate/hakodate dev",
+    "deploy": "pnpm --filter @hakodate/hakodate deploy",
+    "typecheck": "pnpm --filter @hakodate/hakodate typecheck",
+    "test": "pnpm --filter @hakodate/hakodate test"
   },
   "devDependencies": {
     "typescript": "^5.9.3",
