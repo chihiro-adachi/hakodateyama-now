@@ -36,6 +36,10 @@ pnpm run deploy
 # 型チェック
 pnpm typecheck
 
+# Lint
+pnpm lint
+pnpm lint:fix
+
 # テスト
 pnpm test
 

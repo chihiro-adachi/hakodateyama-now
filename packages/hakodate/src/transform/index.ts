@@ -25,7 +25,7 @@ export function groupSnapshotsByDate(rows: StatusSnapshot[]): DateData[] {
     let spots: Spot[];
     try {
       spots = JSON.parse(row.spots);
-    } catch (error) {
+    } catch {
       console.error(`Invalid JSON in row id=${row.id}: ${row.spots}`);
       continue;
     }

@@ -8,6 +8,8 @@
     "dev": "pnpm --filter @hakodate/hakodate dev",
     "deploy": "pnpm --filter @hakodate/hakodate run deploy",
     "typecheck": "pnpm --filter @hakodate/hakodate typecheck",
+    "lint": "pnpm --filter @hakodate/hakodate lint",
+    "lint:fix": "pnpm --filter @hakodate/hakodate lint:fix",
     "test": "pnpm --filter @hakodate/hakodate test"
   },
   "devDependencies": {
