@@ -6,7 +6,7 @@
   },
   "scripts": {
     "dev": "pnpm --filter @hakodate/hakodate dev",
-    "deploy": "pnpm --filter @hakodate/hakodate deploy",
+    "deploy": "pnpm --filter @hakodate/hakodate run deploy",
     "typecheck": "pnpm --filter @hakodate/hakodate typecheck",
     "test": "pnpm --filter @hakodate/hakodate test"
   },

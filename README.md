@@ -1,9 +1,7 @@
 # 函館山混雑状況
 
-函館山の混雑状況を取得・可視化するツール。
+函館山の混雑状況を自動収集・可視化するツール。Cloudflare Workers上で動作。
 
-## 可視化ページ
-
-https://chihiro-adachi.github.io/hakodateyama-now/
+https://hakodate.chihiro-adachi.workers.dev/
 
 ![screenshot](screenshot.png)
